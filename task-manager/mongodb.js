@@ -1,17 +1,31 @@
-//CRUD Operataions
+const express = require('express');
+const { MongoClient, ObjectId } = require('mongodb');
+const app = express();
+const port = 3000;
 
-const mongodb = require('mongodb')
+app.use(express.json());
 
-const MongoClient = mongodb.MongoClient
+const uri = 'mongodb://localhost:27017';
+const dbName = 'myapp';
+const client = new MongoClient(uri);
+
+let db;
+
+async function connectToMongo() {
+  try {
+    await client.connect();
+    db = client.db(dbName);
+    console.log('Successfully connected to MongoDB.');
+  } catch (error) {
+    console.error('Error connecting to MongoDB:', error);
+    process.exit(1);
+  }
+}
+
+connectToMongo();
 
 
-const connectionURL = 'mongodb://127.0.0.1:27017'
-const databaseName = 'task-manager'
+app.listen(port, () => {
+  console.log(`Server is running on http://localhost:${port}`);
+});
 
-MongoClient.connect(connectionURL,{},(error,client)=>{
-    if(error){
-        return console.log("unable to connect to db")
-    }
-
-    console.log("connected succesfully")
-})
