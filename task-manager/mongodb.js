@@ -22,8 +22,12 @@ async function connectToMongo() {
       email: "test@example.com",
       createdAt: new Date()
     });
+
     
     console.log('Successfully connected to MongoDB and created test user');
+
+    const userData = await db.collection('users').findOne({name:"Test User"})
+    console.log(userData)
   } catch (error) {
     console.error('Error:', error);
     process.exit(1);
