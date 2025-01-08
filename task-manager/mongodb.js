@@ -15,17 +15,23 @@ async function connectToMongo() {
   try {
     await client.connect();
     db = client.db(dbName);
-    console.log('Successfully connected to MongoDB.');
+    
+    // Create a collection and insert a document
+    const result = await db.collection('users').insertOne({
+      name: "Test User",
+      email: "test@example.com",
+      createdAt: new Date()
+    });
+    
+    console.log('Successfully connected to MongoDB and created test user');
   } catch (error) {
-    console.error('Error connecting to MongoDB:', error);
+    console.error('Error:', error);
     process.exit(1);
   }
 }
 
 connectToMongo();
 
-
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
-
