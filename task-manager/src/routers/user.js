@@ -27,15 +27,17 @@ router.get("/users/:id",(req,res)=>{
     })
 })
 
-router.post("/users",(req,res)=>{
+router.post("/users",async (req,res)=>{
     const user = new User(req.body)
-    user.save().then(()=>{
-        res.send(user)
-    }).catch((e)=>{
-        res.status(400)
-        res.send(e)
-
-    })
+    try{
+       await user.save()
+       res.status(201).send({user})
+    }
+    catch (error){
+        console.log(user)
+        res.status(400).send(error)
+        console.log('tes')
+    }
 
 })
 
@@ -54,6 +56,14 @@ router.patch('/users/:id', async(req,res)=>{
     }
 })
 
+router.post('/users/login', async (req, res)=>{
+    try{
+        const user = User.findByCredentials(req.body.email, req.body.password)
+        res.send(user)
+    } catch(e){
+        res.status(400).send()  
+    }
+})
 
 
 module.exports = router
