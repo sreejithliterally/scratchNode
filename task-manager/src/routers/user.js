@@ -34,7 +34,6 @@ router.post("/users",async (req,res)=>{
        res.status(201).send({user})
     }
     catch (error){
-        console.log(user)
         res.status(400).send(error)
         console.log('tes')
     }
@@ -58,8 +57,10 @@ router.patch('/users/:id', async(req,res)=>{
 
 router.post('/users/login', async (req, res)=>{
     try{
-        const user = User.findByCredentials(req.body.email, req.body.password)
-        res.send(user)
+        const user = await User.findByCredentials(req.body.email, req.body.password)
+        const token = await user.generateAuthToken()
+        console.log(token)
+        res.send({user,'token':token})
     } catch(e){
         res.status(400).send()  
     }
